@@ -1,0 +1,8 @@
+name: stonebattle
+version: ${project.version}
+main: ${project.group}.${project.name.toLowerCase()}.${project.name}
+api-version: 1.19.3
+author: dogelogic
+
+commands:
+  sb:
