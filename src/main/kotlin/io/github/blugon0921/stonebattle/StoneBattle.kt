@@ -60,6 +60,7 @@ class StoneBattle : JavaPlugin(),Listener {
 
     }
 
+
     override fun onDisable() {
         for(players in Bukkit.getOnlinePlayers()) {
             red_bar.removePlayer(players)

@@ -421,11 +421,13 @@ class Stone : Listener {
             for (players in Bukkit.getOnlinePlayers()) {
                 players.sendTitle(
                     "${teamColor}${teamColor.name.capitalize()}${teamColor} Team${ChatColor.WHITE} 억제기 파괴!",
-                    "${teamColor}${teamColor.name.capitalize()}${teamColor} Team${ChatColor.WHITE} 에서 조약돌이 생성됩니다.",
+                    "이제 조약돌이 생성됩니다.",
                     10,
                     70,
                     20
                 )
+
+                // "${teamColor}${teamColor.name.capitalize()}${teamColor} Team${ChatColor.WHITE} 에서 조약돌이 생성됩니다."
 
                 // 염소 뿔: 소집 소리를 재생합니다.
                 for (player in Bukkit.getOnlinePlayers()) {
@@ -533,6 +535,7 @@ class Stone : Listener {
         }
     }
 
+    // 억제기가 파괴되면 돌 생성 이벤트를 관리합니다.
     var redSpawnTaskId: Int? = null
     var blueSpawnTaskId: Int? = null
     val world: World? = Bukkit.getWorld("world")
@@ -545,7 +548,7 @@ class Stone : Listener {
         when(teamColor) {
             ChatColor.RED -> {
                 redSpawnTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, Runnable {
-                    val itemCount = Random.nextInt(1, 6) // 1~20개의 아이템
+                    val itemCount = Random.nextInt(1, 6) // 1 ~ 5 개의 아이템
                     for (i in 1..itemCount) {
                         world!!.dropItemNaturally(redSpawnLocation, ItemStack(Material.COBBLESTONE))
                     }
@@ -553,7 +556,7 @@ class Stone : Listener {
             }
             ChatColor.BLUE -> {
                 blueSpawnTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, Runnable {
-                    val itemCount = Random.nextInt(1, 6) // 1~20개의 아이템
+                    val itemCount = Random.nextInt(1, 6) // 1 ~ 5 개의 아이템
                     for (i in 1..itemCount) {
                         world!!.dropItemNaturally(blueSpawnLocation, ItemStack(Material.COBBLESTONE))
                     }
@@ -580,4 +583,35 @@ class Stone : Listener {
             else -> {} // 다른 팀 색상이 추가될 경우
         }
     }
+
+    // 상대 팀의 상자를 열 수 없게 하는 이벤트를 관리합니다.
+    @EventHandler
+    fun handleTeamChestInteract(event: PlayerInteractEvent) {
+        val player = event.player
+        val block = event.clickedBlock
+
+        if (block == null || block.type != Material.CHEST) {
+            return
+        }
+
+        if (isInRedTeamTerritory(block) && blueTeam.contains(player)) {
+            player.sendMessage("[!] ${ChatColor.RED}Red Team ${ChatColor.WHITE}의 상자는 열 수 없습니다!")
+            event.isCancelled = true
+            return
+        }
+
+        if (isInBlueTeamTerritory(block) && redTeam.contains(player)) {
+            player.sendMessage("[!] ${ChatColor.BLUE}Blue Team ${ChatColor.WHITE}의 상자는 열 수 없습니다!")
+            event.isCancelled = true
+        }
+    }
+
+    fun isInRedTeamTerritory(block: Block): Boolean {
+        return (block.x in 70..84 && block.y in 76..84 && block.z == 170);
+    }
+
+    fun isInBlueTeamTerritory(block: Block): Boolean {
+        return (block.x in 70..84 && block.y in 76..84 && block.z == -16);
+    }
+
 }
