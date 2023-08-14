@@ -545,7 +545,7 @@ class Stone : Listener {
         when(teamColor) {
             ChatColor.RED -> {
                 redSpawnTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, Runnable {
-                    val itemCount = Random.nextInt(1, 11) // 1~20개의 아이템
+                    val itemCount = Random.nextInt(1, 6) // 1~20개의 아이템
                     for (i in 1..itemCount) {
                         world!!.dropItemNaturally(redSpawnLocation, ItemStack(Material.COBBLESTONE))
                     }
@@ -553,7 +553,7 @@ class Stone : Listener {
             }
             ChatColor.BLUE -> {
                 blueSpawnTaskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, Runnable {
-                    val itemCount = Random.nextInt(1, 11) // 1~20개의 아이템
+                    val itemCount = Random.nextInt(1, 6) // 1~20개의 아이템
                     for (i in 1..itemCount) {
                         world!!.dropItemNaturally(blueSpawnLocation, ItemStack(Material.COBBLESTONE))
                     }
